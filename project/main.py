@@ -86,21 +86,21 @@ def executar_analise(df_consolidado):
     
     # Filtra o DataFrame para manter apenas os registros de 2023 e com motivos válidos
     df_filtrado = df_consolidado[
-        (df_consolidado['Dia'].dt.year == 2023) &
+        ((df_consolidado['Dia'].dt.year == 2023) | (df_consolidado['Dia'].dt.year == 2024)) &
         (df_consolidado['Motivo'].isin(motivos_validos))
     ]
     
     # Aplica a lógica de faltas consecutivas no DataFrame filtrado
     resultado = df_filtrado.groupby('Senha').filter(tem_faltas_consecutivas)
-    
+
     print("Segundo Resultado:")
-    
+
     if not resultado.empty:
         print(resultado[['Senha', 'Funcionário', 'Motivo', 'Dia']])
         return resultado[['Senha', 'Funcionário', 'Motivo', 'Dia']]
     else:
-        print("Nenhum registro encontrado para 2023 que atenda aos critérios.")
-        return pd.DataFrame()  # Retorna um DataFrame vazio se nenhum registro for encontrado
+        print("Nenhum registro encontrado para 2023 ou 2024 que atenda aos critérios.")
+        return pd.DataFrame()
 
 
 
